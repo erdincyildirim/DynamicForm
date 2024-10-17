@@ -1,0 +1,43 @@
+﻿@using DynamicForm.UI.ViewModel
+@model List<FormVM>
+
+<section class="content-header">
+	<h1>
+		Form
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-file-text-o"></i>Tüm Formlar</a></li>
+		<li class="active">Form</li>
+	</ol>
+</section>
+<section class="content">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="box box-info">
+				<div class="box-header with-border">
+					<h3 class="box-title">Form</h3>
+				</div>
+				<div class="box-body">
+					<form id="form">
+						<div class="row">
+							<div class="col-md-12">
+								@foreach (var item in Model)
+								{
+
+									<div class="form-group">
+										<label class="control-label">@item.Name</label>
+										<input type="@item.DataType" class="form-control" required="@item.Required" placeholder="@item.Name" />
+									</div>
+
+								}
+							</div>
+							<div class="col-md-12">
+								<button type="submit" class="btn btn-success" style="width:100%">Formu Kaydet</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

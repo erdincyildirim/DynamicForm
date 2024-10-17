@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+
+	<title>Dynamic Form Project</title>
+
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+	<link href="~/Assets/Css/bootstrap.min.css" rel="stylesheet" />
+
+	<link href="~/Assets/Css/adminlte.min.css" rel="stylesheet" />
+
+	<link href="~/Assets/Css/allskins.min.css" rel="stylesheet" />
+
+	<link href="~/Assets/Css/font-awesome.min.css" rel="stylesheet" />
+
+	<link href="~/Assets/Css/google-fonts.min.css" rel="stylesheet" />
+
+	@RenderSection("Styles", false)
+</head>
+<body class="hold-transition skin-purple sidebar-mini">
+
+	<div class="wrapper">
+
+		@await Html.PartialAsync("_Header.cshtml")
+
+		@await Html.PartialAsync("_Sidebar.cshtml")
+
+		<div class="content-wrapper">
+			@RenderBody()
+		</div>
+
+		@await Html.PartialAsync("_Footer.cshtml")
+
+	</div>
+
+	<script src="~/Assets/Js/jquery.min.js"></script>
+
+	<script src="~/Assets/Js/bootstrap.min.js"></script>
+
+	<script src="~/Assets/Js/adminlte.min.js"></script>
+
+	<script src="~/Assets/Js/demo.min.js"></script>
+
+	<script src="~/Assets/Js/jquery.validate.min.js"></script>
+
+	<script src="~/Assets/Js/jquery.validate.unobtrusive.min.js"></script>
+
+	<script src="~/Assets/Js/jquery.unobtrusive-ajax.min.js"></script>
+
+	<script src="~/Assets/Js/sweetalert.min.js"></script>
+
+	@RenderSection("Scripts", false)
+
+</body>
+</html>

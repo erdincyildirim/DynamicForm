@@ -1,0 +1,311 @@
+﻿@model CreateFormDto
+
+@section Styles {
+	<style>
+		table td {
+			vertical-align: middle !important;
+		}
+	</style>
+}
+<section class="content-header">
+	<h1>
+		Form Listesi
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-file-text-o"></i>Tüm Formlar</a></li>
+		<li class="active">Form Listesi</li>
+	</ol>
+</section>
+<section class="content">
+	<div class="form-group">
+		<div class="input-group">
+			<span class="input-group-addon"><i class="fa fa-search"></i></span>
+			<input id="search" type="text" class="form-control" placeholder="Form Ara" maxlength="50" />
+		</div>
+	</div>
+	<div class="form-group">
+		<a id="btnnewform" class="btn btn-success" style="width:100%" data-toggle="modal" data-target="#modal-form" data-backdrop="static" data-keyboard="false"><span class="fa fa-plus-circle"></span>&nbsp;&nbsp;Yeni Form Ekle</a>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-warning">
+				<div class="box-header with-border" data-widget="collapse">
+					<h3 class="box-title">Tüm Form Listesi (<span id="formcount"></span>)</h3>
+					<div class="box-tools">
+						<button type="button" class="btn btn-box-tool">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div id="progress" class="progress" style="border-radius: 5px; display:none">
+								<div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%; font-weight: bold">
+									Yükleniyor !!!
+								</div>
+							</div>
+							<div id="nodata" style="margin-top: 10px; margin-bottom: 10px; display:none" class="text-danger text-center">Herhangi Bir Veri Bulunmamaktadır !</div>
+							<div class="table-responsive" id="tablodiv" style="display:none">
+								<table class="table table-hover table-striped" id="tablo">
+									<thead>
+										<tr class="bg-primary">
+											<th style="min-width: 30px; width: 30px"></th>
+											<th style="min-width: 30px; width: 30px"></th>
+											<th>Form Adı</th>
+											<th>Açıklama</th>
+											<th>Oluşturma Zamanı</th>
+											<th>Oluşturan</th>
+										</tr>
+									</thead>
+									<tbody id="body"></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modal-form" role="dialog">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header bg-primary">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title"><i class="fa fa-file"></i>&nbsp;&nbsp;<span>Yeni Form Oluştur</span></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<form asp-controller="Form" asp-action="Create" data-ajax="true" data-ajax-method="post" data-ajax-begin="OnBegin" data-ajax-success="OnSuccess" data-ajax-complete="OnComplete">
+								<div class="form-group">
+									<label class="control-label">Form Adı</label><span class="text-danger" asp-validation-for="@Model.Name"></span>
+									<input type="text" placeholder="Form Adı" class="form-control" asp-for="@Model.Name" />
+								</div>
+								<div class="form-group">
+									<label class="control-label">Açıklama</label>
+									<textarea class="form-control" placeholder="Açıklama" asp-for="@Model.Description"></textarea>
+								</div>
+								<div>Form Alanları</div>
+								<hr class="no-margin" />
+								<div class="row" style="margin-top:10px">
+
+									<div class="col-md-4">
+										<label class="control-label">Alan Adı</label>
+										<input id="fieldname" type="text" class="form-control" placeholder="Alan Adı" />
+									</div>
+									<div class="col-md-3">
+										<label class="control-label">Veri Türü</label>
+										<select id="fielddatatype" class="form-control">
+											<option value="text">STRING</option>
+											<option value="number">NUMBER</option>
+										</select>
+									</div>
+									<div class="col-md-3">
+										<label class="control-label">Zorunlu Mu?</label>
+										<select id="fieldrequired" class="form-control">
+											<option value="true">Zorunlu</option>
+											<option value="false">Zorunlu Değil</option>
+										</select>
+									</div>
+									<div class="col-md-2">
+										<label class="control-label">&nbsp;</label>
+										<a id="btnadd" class="btn btn-success" style="width:100%">Ekle</a>
+									</div>
+								</div>
+								<div class="table-responsive" id="fieldtablo" style="display:none; margin-top:10px">
+									<input type="hidden" class="form-control" asp-for="@Model.Fields" />
+									<table id="fieldtable" class="table table-hover table-striped">
+										<thead>
+											<tr class="bg-primary">
+												<th>Alan Adı</th>
+												<th>Veri Türü</th>
+												<th>Zorunlu Mu ?</th>
+											</tr>
+										</thead>
+										<tbody id="fieldbody"></tbody>
+									</table>
+								</div>
+								<div class="form-group" style="margin-top:10px">
+									<button id="btncreateform" class="btn btn-success" style="width:100%">Form Oluştur</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="background-color: #f5f5f5">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</section>
+
+@section Scripts {
+
+	<script>
+
+		$(document).ready(function () {
+			SearchForm();
+			GetAllForms();
+		});
+
+		function GetAllForms() {
+			var progress = $("#progress");
+			var nodata = $("#nodata");
+			var tablodiv = $("#tablodiv");
+			var html = "";
+
+			$.ajax({
+				url: "/Form/GetAll",
+				type: "Get",
+				beforeSend: function () {
+					progress.show();
+				},
+				success: function (result) {
+					$.each(result, function (key, item) {
+						html += "<tr>";
+						html += "<td><a class='btn btn-danger delete' data-id='" + item.Id + "'><span class='fa fa-trash-o'></span>&nbsp;&nbsp;Sil</a></td>";
+						html += "<td><a href='/forms/" + item.Id +"' class='btn btn-warning'><span class='fa fa-eye'></span>&nbsp;&nbsp;Görüntüle</a></td>";
+						html += "<td>" + item.Name + "</td>";
+						html += "<td>" + item.Description + "</td>";
+						html += "<td>" + item.CreatedAt + "</td>";
+						html += "<td>" + item.CreatedBy + "</td>";
+						html += "</tr>";
+					});
+					$("#body").html(html);
+					$("#formcount").html($("#body tr").length);
+				},
+				complete: function () {
+					progress.hide();
+					html == "" ? nodata.show() && tablodiv.hide() : nodata.hide() && tablodiv.show();
+				}
+			});
+		}
+
+		$("#tablo").on("click", ".delete", function () {
+			swal({
+				icon: "warning",
+				text: "Silmek İstediğinize Eminmisiniz ?",
+				dangerMode: true,
+				buttons: ["Vazgeç", "Evet"],
+			}).then((WillDelete) => {
+				if (WillDelete) {
+					var id = $(this).data("id");
+					var tr = $(this).closest("tr");
+					$.ajax({
+						url: "/Form/DeleteForm/" + id,
+						type: "POST",
+						success: function (result) {
+							if (result.Status == true) {
+								swal(result.Message, {
+									icon: "success",
+									button: "Tamam"
+								});
+								tr.remove();
+							}
+						}
+					});
+				}
+			});
+		});
+
+		function OnBegin() {
+			$("#createform").prop("disabled", true);
+		}
+
+		function OnSuccess(result) {
+			if (result.Status == true) {
+				$("#modal-form").modal("toggle");
+				swal(result.Message, {
+					icon: "success",
+					button: "Tamam"
+				});
+				GetAllForms();
+			}
+		}
+
+		function OnComplete() {
+			$("#createform").prop("disabled", false);
+		}
+
+		$("#btnnewform").click(function () {
+			$("#fieldname").val("");
+			$("#Name").val("");
+			$("#Description").val("");
+			$("#Fields").val("");
+			fieldData =[];
+			$("#fieldtablo").hide();
+			$("#fieldtable > tbody").html("");
+		})
+
+		var fieldData = [];
+
+		$("#btnadd").click(function () {
+
+			var fieldname = $("#fieldname").val();
+			var fielddatatype = $("#fielddatatype").val();
+			var fieldrequired = $("#fieldrequired").val();
+
+			if (fieldname == "") {
+				swal("Alan Adı Giriniz !", {
+					icon: "error",
+					button: "Tamam"
+				});
+			}
+			else {
+
+				fieldData.push({
+					name: fieldname,
+					dataType: fielddatatype,
+					required: fieldrequired
+				});
+
+				var satir = "<tr><td>" + fieldname + "</td><td>" + (fielddatatype == "text" ? "STRING" : "NUMBER") + "</td><td>" + (fieldrequired == "true" ? "Zorunlu" : "Zorunlu Değil") + "</td></tr>";
+
+				$("#fieldtablo").show();
+				$("#fieldbody").append(satir);
+				$("#fieldname").val("");
+				$("#Fields").val(JSON.stringify(fieldData));
+
+			}
+		});
+
+		$("form").submit(function (event) {
+			var satir = $("#fieldbody tr").length;
+			if (satir === 0) {
+				swal("En Az 1 Form Alanı Tanımlayınız !", {
+					icon: "error",
+					button: "Tamam"
+				});
+				event.preventDefault();
+			}
+		});
+
+		function SearchForm() {
+            $("#search").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#body tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                    var count = $("#body tr:visible").length;
+                    $("#formcount").html("Toplam : " + count);
+                    if (count == 0) {
+                        $("#tablo").attr("style", "visibility:hidden");
+                        $("#nodata").show();
+                    }
+                    else {
+                        $("#tablo").attr("style", "visibility:unset");
+                        $("#nodata").hide();
+                    }
+                });
+
+            });
+        }
+
+	</script>
+
+}
